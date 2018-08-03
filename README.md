@@ -4,7 +4,7 @@ Small general purpose bot built in JavaScript using EEJSIDE: https://sirjosh3917
 Built in about a couple hours lol
 
 # Download
-- Download lightbot.html from the repository
+- Download [lightbot.html](https://github.com/EverybodyPrograms/Lightbot/releases/latest) from the repository
 
 # Configuration
 1. Open it in a text editor, and scroll down to TOGGLES in the document
