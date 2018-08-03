@@ -50,7 +50,7 @@
 //    |_|  \____/ \_____|\_____|______|______|_____/ 
 
 // Input your username here so you can use commands
-var yourUsername = "joo456";
+var yourUsername = "x";
 
 // Change false to true to turn on snake
 // Warning: snake can be laggy depending on your PC and connection
@@ -86,10 +86,10 @@ var goodbyes = true;
 var adminlist = 
     ["a", //Put users in here inside quotes
      "b", 
-     "joebot456"];
+     "c"];
      
 var banlist = 
-    ["bettyloo", //Put users in here inside quotes
+    ["x", //Put users in here inside quotes
      "y",
      "z"];
      
