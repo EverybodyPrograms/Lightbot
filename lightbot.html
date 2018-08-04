@@ -181,17 +181,16 @@
 
 
 			function submit() {
-				       snakeON = document.getElementById('snakebox'  ).checked;
-				    crowntowin = document.getElementById('crownbox'  ).checked;
-				   trophytowin = document.getElementById('trophybox' ).checked;
-				        admins = false;
-				          bans = false;
-				friendsgetedit = document.getElementById('friendbox' ).checked;
-				      welcomes = document.getElementById('welcomebox').checked;
-				      goodbyes = document.getElementById('byebox'    ).checked;
-				 deathCommands = document.getElementById('deathbox'  ).checked;
-				    adminInput = document.getElementById("userInput").value; 
-				 alert(adminInput);
+				try{snakeON = document.getElementById('snakebox'  ).checked;}catch(err){snakeON = false;}
+				try{crowntowin = document.getElementById('crownbox'  ).checked;}catch(err){crowntowin = false;}
+				try{trophytowin = document.getElementById('trophybox' ).checked;}catch(err){trophytowin = false;}
+				try{admins = document.getElementById('adminbox'  ).checked;}catch(err){admins = false;}
+				try{bans = document.getElementById('banbox'    ).checked;}catch(err){bans = false;}
+				try{friendsgetedit = document.getElementById('friendbox' ).checked;}catch(err){friendsgetedit = false;}
+				try{welcomes = document.getElementById('welcomebox').checked;}catch(err){welcomes = false;}
+				try{goodbyes = document.getElementById('byebox'    ).checked;}catch(err){goodbyes = false;}
+				try{deathCommands = document.getElementById('deathbox'  ).checked;}catch(err){deathCommands = false;}
+			    try{adminInput = document.getElementById("userInput").value; }catch(err){adminInput = false;}
 			}
 //
 		//	function getCookie(cname) {
@@ -215,7 +214,7 @@
 		//	}
 			function connect() {
 				let __EEJSIDE___ = document.getElementById("input-email");
-				let __EEJSIDE____ = document.getElementById("input-password");
+				try{let __EEJSIDE____ = document.getElementById("input-password");} catch(err) {alert(password did not get read);}
 				let __EEJSIDE_____ = document.getElementById("input-worldid");
 				let __EEJSIDE______ = document.getElementById("log");
 				let __EEJSIDE_______ = function(msg, name = "EEJSIDE") {
