@@ -1,37 +1,229 @@
 <html>
 	<head>
-		<title>Transcoded Bot - from Everybody Edits JS IDE</title>
+		<title>Lightbot</title>
 		<script src="https://sirjosh3917.github.io/EEJSIDE/js/PlayerIOClient.development.js"></script>
 		<script src="https://sirjosh3917.github.io/EEJSIDE/js/jsparse_clean.js"></script>
 		<script src="https://sirjosh3917.github.io/EEJSIDE/js/BlockHandler.js"></script>
 		<script src="https://sirjosh3917.github.io/EEJSIDE/js/ConnectHandler.js"></script>
 		<link  href="https://sirjosh3917.github.io/EEJSIDE/styles.css" rel="stylesheet"/>
-
+		<link rel="shortcut icon" type="image/png" href="file:///Users/joe-macbook/Desktop/favicon.ico"/>
 		<style>
-			h1,p {
+			body {
+				font-family: monospace;
+			}
+			a {
+    			text-decoration: none;
+			}	
+			h1,h2,p {
 				color: white;
 				text-align: center;
 				font-family: monospace;
 			}
+			h3,h4,h5,h6 {
+				color: white;
+				font-family: monospace;
+			}
+			
+			* {
+			box-sizing: border-box;
+			}
+			label {
+				color:white;
+				font-size:12px;
+			}
 
+			input[type=checkbox]:hover {
+				box-shadow:0px 0px 10px #1300ff;
+			}
+			body {
+			  margin: 0;
+			}
+			/* Create three equal columns that floats next to each other */
+			.column.settings {
+				float: left;
+				width: 30%;
+				padding: 15px;
+			}
+			.column.input {
+				float: left;
+				width: 70%;
+				padding: 15px;
+			}
+
+			/* Clear floats after the columns */
+			.row:after {
+				content: "";
+				display: table;
+				clear: both;
+			}
+			/* Responsive layout - makes the three columns stack on top of each other instead of next to each other */
+			@media screen and (max-width:417px) {
+				.column.settings, .column.input {
+					width: 100%;
+				}
+			}
 		</style>
 	</head>
 
 	<body>
 
-		<h1>Lightbot</h1>
-		<p>Make sure you have configured the bot before using it (open this file in a text editor)</p>
-		<table class="menu" style="width: 50%; margin-left: 25%; margin-right: 25%; margin-top: 10%;">
-			<tbody>
-				<tr><td><input id="input-email" type="text" /></td></tr>
-				<tr><td><input id="input-password" type="text" /></td></tr>
-				<tr><td><input id="input-worldid" type="text" /></td></tr>
-				<tr><td><input onclick="connect();" type="button" value="Connect"></td></tr>
-				<tr><td><textarea id="log" rows=8></textarea></td></tr>
-			</tbody>
-		</table>
-		
+		<h1>Lightbot Online v1.1</h1>
+		<p>Currently admin/banlists dont work, working on it tommorow. Report bugs to the <a href="https://github.com/EverybodyPrograms/Lightbot">github page.</a></p>
+
+		<div class="row">
+
+
+			<div class="column settings">
+
+				<h3>Settings</h3>
+				<h5>These settings save in localhost, they will persist until removed manually<br>(hopefully)</h5>
+
+				<form>
+				<!--	<label> Username</label>
+					<input id="textbox"type="text" name="username"><br> -->
+
+					<input id="snakebox" type="checkbox" name="snake" value="Snake" style="color: white"><label> Snake<br></label>
+
+					<input id="crownbox" type="checkbox" name="crown" value="Crowntowin" style="color: white"><label> Crown to win<br></label>
+
+					<input id="trophybox" type="checkbox" name="trophy" value="Trophytowin" checked style="color: white"><label> Trophy to win<br></label>
+					
+					<input id="adminbox" type="checkbox" name="admins" value="Admins" disabled="disabled" checked style="color: white"><label> Admins<br></label>
+					<input id="banbox" type="checkbox" name="bans" value="Bans" disabled="disabled" checked style="color: white"><label> Bans<br></label>
+					
+					<input id="friendbox" type="checkbox" name="friendsgetedit" value="Friendsgetedit" checked style="color: white"><label> Friends get edit<br></label>
+					
+					<input id="welcomebox" type="checkbox" name="welcomes" value="Welcomes" checked style="color: white"><label> Welcomes<br></label>
+					
+					<input id="byebox" type="checkbox" name="goodbyes" value="Goodbyes" checked style="color: white"><label> Goodbyes<br></label>
+					
+					<input id="deathbox" type="checkbox" name="deaths" value="deaths" checked style="color: white"><label> Death commands<br><br></label>
+					
+    				<!-- <input type="text" id="userInput"/> -->
+
+				</form>
+				<input type="button" value="Submit" onclick="submit();">
+			</div>
+
+			<div class="column input">
+				<table class="menu" style="width: 90%; margin-left: 5%; margin-right: 5%; margin-top: 15%;">
+					<tbody>
+						<tr><td><input id="input-email" type="text" placeholder="Username"/></td></tr>
+						<tr><td><input id="input-password" type="password" placeholder="Password"/></td></tr>
+						<tr><td><input id="input-worldid" type="text" placeholder="World ID"/></td></tr>
+						<tr><td><input onclick="connect();" type="button" value="Connect"></td></tr>
+						<tr><td><textarea id="log" rows=8></textarea></td></tr>
+					</tbody>
+				</table>
+			</div>
+	</div>
 		<script>
+
+
+		$("input:checkbox").click(function(e){
+			if (e.target.checked) {
+		  	localStorage.checked = true;
+		  } else {
+		  	localStorage.checked = false;
+		  }
+		})
+		 
+		$( document ).ready(function() {
+		  
+			document.querySelector('#checkBox').checked = localStorage.checked
+		  
+		});
+
+		//  _______ ____   _____  _____ _      ______  _____ 
+		// |__   __/ __ \ / ____|/ ____| |    |  ____|/ ____|
+		//    | | | |  | | |  __| |  __| |    | |__  | (___  
+		//    | | | |  | | | |_ | | |_ | |    |  __|  \___ \ 
+		//    | | | |__| | |__| | |__| | |____| |____ ____) |
+		//    |_|  \____/ \_____|\_____|______|______|_____/ 
+
+		// Input your username here so you can use commands
+		var yourUsername = "joo456";
+
+
+		// Change false to true to turn on snake
+		// Warning: snake can be laggy depending on your PC and connection
+		var snakeON;
+
+		// Change false to true to turn on crown to fun
+		// You must be the owner of the world to use this
+		// A bit buggy, turn off if it isnt working well.
+		var crowntowin;
+
+		// Change false to true to turn on trophy to win
+		// You must be the owner of the world to use this
+		var trophytowin;
+
+		// Change false to true to turn on admins
+		// You must be the owner of the world to use this
+		var admins;
+
+		// Change false to true to turn on bans
+		// You must use the owner of the world to use this
+		var bans;
+
+		// Change false to true to turn on friends get edits
+		// You must use the owner of the world to use this
+		var friendsgetedit;
+
+		// Change false to true to turn on welcomes
+		var welcomes;
+
+		// Change false to true to turn on goodbyes
+		var goodbyes;
+
+		// Change false to true to turn on death commands
+		var deathCommands;
+
+		var adminlist = 
+			["a", //Put users in here inside quotes
+			 "x", 
+			 "x"];
+			 
+		var banlist = 
+			["x", //Put users in here inside quotes
+			 "y",
+			 "z"];
+
+
+
+			function submit() {
+				       snakeON = document.getElementById('snakebox'  ).checked;
+				    crowntowin = document.getElementById('crownbox'  ).checked;
+				   trophytowin = document.getElementById('trophybox' ).checked;
+				        admins = document.getElementById('adminbox'  ).checked;
+				          bans = document.getElementById('banbox'    ).checked;
+				friendsgetedit = document.getElementById('friendbox' ).checked;
+				      welcomes = document.getElementById('welcomebox').checked;
+				      goodbyes = document.getElementById('byebox'    ).checked;
+				 deathCommands = document.getElementById('deathbox'  ).checked;
+				    adminInput = document.getElementById("userInput").value; 
+				 alert(adminInput);
+			}
+//
+		//	function getCookie(cname) {
+//
+		//		document.cookie = "username=John Doe; expires=2147483647; path=/";
+		//		document.cookie = "username=; expires=Thu, 01 Jan 1970 00:00:00 UTC; //path=/;";
+//
+		//		var name = cname + "=";
+		//		var decodedCookie = decodeURIComponent(document.cookie);
+		//		var ca = decodedCookie.split(';');
+//				for(var i = 0; i <ca.length; i++) {
+		////			var c = ca[i];
+////					while (c.charAt(0) == ' ') {
+		////				c = c.substring(1);
+//		//			}
+		////			if (c.indexOf(name) == 0) {
+//		//				return c.substring(name.length, c.length);
+		////			}
+//		//		}
+		//		return "";
+		//	}
 			function connect() {
 				let __EEJSIDE___ = document.getElementById("input-email");
 				let __EEJSIDE____ = document.getElementById("input-password");
@@ -59,8 +251,8 @@
 						connection = __EEJSIDE__.con;
 
 						//Here is where your bot code is!
-	 
 
+ 
 // A small general purpose bot in Javascript
 // Open source: https://github.com/EverybodyPrograms/Lightbot
 // Thanks to Ninjasupeatsninja / SirJosh3917 for EEJSIDE: 
@@ -78,57 +270,7 @@
 //      (Preferrably use your own account on your own world)
 
 
-//  _______ ____   _____  _____ _      ______  _____ 
-// |__   __/ __ \ / ____|/ ____| |    |  ____|/ ____|
-//    | | | |  | | |  __| |  __| |    | |__  | (___  
-//    | | | |  | | | |_ | | |_ | |    |  __|  \___ \ 
-//    | | | |__| | |__| | |__| | |____| |____ ____) |
-//    |_|  \____/ \_____|\_____|______|______|_____/ 
 
-// Input your username here so you can use commands
-var yourUsername = "joo456";
-
-// Change false to true to turn on snake
-// Warning: snake can be laggy depending on your PC and connection
-var snake = true;
-
-// Change false to true to turn on crown to fun
-// You must be the owner of the world to use this
-// A bit buggy, turn off if it isnt working well.
-var crowntowin = false;
-
-// Change false to true to turn on trophy to win
-// You must be the owner of the world to use this
-var trophytowin = false;
-
-// Change false to true to turn on admins
-// You must be the owner of the world to use this
-var admins = true;
-
-// Change false to true to turn on bans
-// You must use the owner of the world to use this
-var bans = true;
-
-// Change false to true to turn on friends get edits
-// You must use the owner of the world to use this
-var friendsgetedit = true;
-
-// Change false to true to turn on welcomes
-var welcomes = true;
-
-// Change false to true to turn on goodbyes
-var goodbyes = true;
-
-var adminlist = 
-	["a", //Put users in here inside quotes
-	 "b", 
-	 "joebot456"];
-	 
-var banlist = 
-	["bettyloo", //Put users in here inside quotes
-	 "y",
-	 "z"];
-	 
 	 
 /////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////
@@ -138,31 +280,92 @@ var banlist =
 /////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////
 
+submit();
+
 var snakeDelay = 10;
 var loop;
 var i;
 var player = [];
 
+// Snake
+var layer;
+var x;
+var y;
+var blockid;
+
+// The snake function
+function snake() {
+	
+	switch (blockid) {
+	    
+	    case 1088: { // white              // Grey
+            connection.send("b", layer, x, y, 9);
+        } break;
+            
+        case 9: { // Grey                  // Black
+            connection.send("b", layer, x, y, 182);
+        } break;
+            
+        case 182: { // Black
+            if (loop) {                         // White
+			    connection.send("b", layer, x, y, 1088);
+			}
+			else {                            // Nothing
+			    connection.send("b", layer, x, y, 0);
+			}
+        } break;
+        
+        case 12: { // Red                   // Orange
+            connection.send("b", layer, x, y, 1018);
+        } break;
+
+        case 1018: { // Orange           // Yellow
+            connection.send("b", layer, x, y, 13);
+        } break;
+                
+        case 13: { // Yellow              // Green
+            connection.send("b", layer, x, y, 14);
+        } break;
+                 
+        case 14: { // Green                // Cyan
+            connection.send("b", layer, x, y, 15);
+        } break;
+                
+        case 15: { // Cyan                 // Blue
+            connection.send("b", layer, x, y, 10);
+        } break;
+                
+        case 10: { // Blue             // Purple
+            connection.send("b", layer, x, y, 11);
+        } break;
+
+        case 11: { // Purple
+        	if (loop) {                         // Red
+			    connection.send("b", layer, x, y, 12);
+			}
+			else {                            // Nothing
+			    connection.send("b", layer, x, y, 0);
+			}
+        } break;
+    }
+} 
+
+
 // add a callback handler
 connection.addMessageCallback("*", function(m) {
 	switch(m.type) {
-			
+	    
 		// Joining started
 		case "init": {
+			log(getCookie("username"));
 			owner = m.getString(0);
 			isOwner = m.getBoolean(15);
-			
+
+
 			// send "init2"
 			
-			if (yourUsername != "x") {
-				connection.send("init2"); 
-			}
-			else {
-				log("===================================");
-				log("Please input your username!!!");
-				log("Open the html file in a text editor and scroll down to toggles.");
-				log("===================================");
-			}
+			connection.send("init2"); 
+		
 		} break;
 		
 		// Joining finished
@@ -177,15 +380,15 @@ connection.addMessageCallback("*", function(m) {
 			username = m.getString(1);
 			isFriend = m.getBoolean(12);
 			
-			if (username == yourUsername) {
-				var yourID = playerid;
-			}
+			connection.send(username)
+
 			player[playerid] = username;
 			
 			if (welcomes) {
 				connection.send("say", "Hi " + username);
 			}
-			
+
+
 			if (admins) {
 				for (i = 0; i < adminlist.length; i++) {
 					if (adminlist[i] == username) {
@@ -220,23 +423,65 @@ connection.addMessageCallback("*", function(m) {
 		
 		// when someone says something
 		case "say": {
-			if (m.getInt(0) == yourUsername) {
+			var playerid = m.getInt(0);	
+			var input = m.getString(1);
+		//	if (playerid == yourUsername) {
 				
 				// If they say !help
-				if(m.getString(1) == "!help") {
-					connection.send("say", "!download - Show the download link");
-					connection.send("say", "!loopon - make snakes loop back instead of ending");
-					connection.send("say", "!loopoff - make snakes end instead of looping");
+				if(input == "!help") {
+					connection.send("pm",playerid, "!download - Show the download link");
+					connection.send("pm",playerid, "!loopon - make snakes loop back instead of ending");
+					connection.send("pm",playerid, "!loopoff - make snakes end instead of looping");
+					connection.send("pm",playerid, "!oof - Kills you");
+					connection.send("pm",playerid, "!OOF - Resets you");
+
 				}
-				
-				if(m.getString(1) == "!loopon") {
+
+				// If they say !help
+				if(input == "!toggles") {
+					connection.send("pm",playerid, "Snake: " + String(snakeON));
+					connection.send("pm",playerid, "Crown to win: " + String(crowntowin));
+					connection.send("pm",playerid, "Trophy to win: " + String(trophytowin));
+					connection.send("pm",playerid, "Admins: " + String(admins));
+					connection.send("pm",playerid, "Bans: " +String(bans));
+					connection.send("pm",playerid, "Friends get edit: " + 
+						String(friendsgetedit));
+					connection.send("pm",playerid, "Bans: " +String(bans));
+					connection.send("pm",playerid, "Welcomes: " +String(welcomes));
+					connection.send("pm",playerid, "Goodbyes: " +String(goodbyes));
+					connection.send("pm",playerid, "OOFs: " +String(deathCommands));
+
+
+				}
+	
+				if(input == "!loopon") {
 					loop = true;
 				}
 				
-				if(m.getString(1) == "!loopoff") {
+				if(input == "!loopoff") {
 					loop = false;
 				}
-			}
+
+				if (deathCommands) {
+					if(input == "!oof") {
+						if (player[playerid] == "undefined") {
+							connection.send("say", "player not found, please rejoin")
+						}
+						else {
+						connection.send("say", "/kill " + player[playerid]);
+						log(player[playerid] + " killed");
+						}
+					}
+					if(input == "!OOF") {
+						if (player[playerid] == "undefined") {
+							connection.send("say", "player not found, please rejoin")
+						} else {
+						connection.send("say", "/reset " + player[playerid]);
+						log(player[playerid] + " reset");
+						}
+					}
+				}
+		//	}
 			
 			// if they said "!download"
 				if(m.getString(1) == "!download") {
@@ -249,11 +494,11 @@ connection.addMessageCallback("*", function(m) {
 		
 		// when someone places a block
 		case "b": {
-			if (snake) {
-			var layer = m.getInt(0);
-			var x = m.getUInt(1);
-			var y = m.getUInt(2);
-			var blockid = m.getUInt(3);
+			if (snakeON) {
+			layer = m.getInt(0);
+			x = m.getUInt(1);
+			y = m.getUInt(2);
+			blockid = m.getUInt(3);
 
 			setTimeout(snake, snakeDelay);
 			}
@@ -261,91 +506,32 @@ connection.addMessageCallback("*", function(m) {
 		
 		// when someone touches a crown
 		case "k": {
-			if (crowntowin) {
-				var crownid = m.getInt(0);
-				connection.send("say", "/ge " + player[playerid]);
-				log(username + " given edit. Reason: Collected crown");
+			var crownid = m.getInt(0);
+
+			if (crowntowin && (crownid != -1) {
+				log(player[crownid] + " got edit")
+				connection.send("say", "/ge " + player[crownid]);
 			}
 		} break;
 		
 		// when someone collects a trophy
 		case "ks": {
+			var wonid = m.getInt(0);
+
 			if (trophytowin) {
-				var wonid = m.getInt(0);
-				connection.send("say", "/ge " + player[playerid]);
-				log(username + " given edit. Reason: Collected trophy");
+				log(player[wonid] + " got edit")
+				connection.send("say", "/ge " + player[wonid]);
 			}
 		} break;
 		
-		// The snake function
-		function snake() {
-			
-			// Prepare for messy bad code: [be warned its bad] 
-			if (blockid == 9) {
-				connection.send("b", layer, x, y, 182);
-			}
-			
-			else if (blockid == 182) {
-				if (loop) {
-					connection.send("b", layer, x, y, 1088);
-				}
-				else {
-				connection.send("b", layer, x, y, 0);}
-			}
-			
-			else if (blockid == 1088) {
-				 connection.send("b", layer, x, y, 9);
-			}
-			
-			else if (blockid == 12) {
-				 connection.send("b", layer, x, y, 1018);
-			}
-			
-			else if (blockid == 1018) {
-				 connection.send("b", layer, x, y, 13);
-			}
-			
-			else if (blockid == 13) {
-				 connection.send("b", layer, x, y, 14);
-			}
-			
-			else if (blockid == 14) {
-				 connection.send("b", layer, x, y, 15);
-			}
-			
-			else if (blockid == 15) {
-				 connection.send("b", layer, x, y, 10);
-			}
-			
-			else if (blockid == 10) {
-				 connection.send("b", layer, x, y, 11);
-			}
-			
-			else if (blockid == 11) {
-				if (loop) {
-					connection.send("b", layer, x, y, 1018);
-				}
-				else {
-				 connection.send("b", layer, x, y, 0);}
-			}
-			
-			else if (blockid == 100) { 
-				 connection.send("b", layer, x, y, 101);
-			}
-			
-			else if (blockid == 101) { 
-				 connection.send("b", layer, x, y, 100);
-			}
-			
-			else if (blockid == 255) { 
-				 connection.send("b", layer, x, y, 0);
-			}
-			
-		} break;
-	}
-});
+		
+		
+		
+	}});
 
 connection.send("init");
+
+
 
 						//Here's where your bot code ends!
 					}).catch(__EEJSIDE__ => {
