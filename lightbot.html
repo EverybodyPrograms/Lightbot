@@ -509,7 +509,7 @@ connection.addMessageCallback("*", function(m) {
 		case "k": {
 			var crownid = m.getInt(0);
 
-			if (crowntowin && (crownid != -1) {
+			if (crowntowin && (crownid != -1)) {
 				log(player[crownid] + " got edit")
 				connection.send("say", "/ge " + player[crownid]);
 			}
