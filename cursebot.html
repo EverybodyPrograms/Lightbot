@@ -68,8 +68,8 @@
 
 	<body>
 
-		<h1>Cursebot Online v1.1</h1>
-		<p>Currently admin/banlists dont work, working on it tommorow. Report bugs to the <a href="https://github.com/EverybodyPrograms/Cursebot">github page.</a></p>
+		<h1>Cursebot Online vIDK</h1>
+		<p>Report bugs to the <a href="https://github.com/EverybodyPrograms/Cursebot">github page.</a></p>
 
 		<div class="row">
 
@@ -182,186 +182,317 @@
 
 						//Here is where your bot code is!
 
- // Demo JS Code - try pressing "connect" and then "compile"!
-//
-// This IDE includes for you:
-// BlockHandler.js
-// jsparse_clean.js
-//
-// So you can use whatever functions those have in your code!
-//
-// ~by SirJosh3917/ninjasupeatsninja
+
+///// NOTES /////
 
 // BOT PLAN:
 // make a bot that will run a curse tag minigame:
 // - track players DONE
-// - sense when a round starts DONE?
-// - give a random player curse for 10-30 seconds
-// - end round when one player is left
-// - clear player of effects
-// - give them coin
+// - sense when a round starts DONE
+// - give a random player curse for 10-30 seconds DONE
+// - end round when one player is left DONE
+// - clear player of effects DONE
+// - give them coin DONE
 // - restart round
 
 // EXTENDED PLAN:
-// make the bot for general boss use
-// - match smiley mini
 // - random boss themes?
 // - better reward system
 // - save progress into file
 
-// please only use var, 'let' will give you errors.
+///// END NOTES /////
+
+
+
+//  DEFINITIONS //
 var testVar;
 var playerid;
 var team;
 var ownerUsername;
 var ownerID;
-//class player {
-//    constructor(username, playing)
-//};
-var player = [];
-var playing = [];
+
+//  ARRAYS //
+var player = [];  // Used to get usernames from user IDs
+var playing = []; // Used to list users currently playing
+var admins = [    // The admin list
+	"yoshi626",
+	"joebot456",
+	"oooobo"
+	]
+var bans = [      // The ban list
+	"thelizardface5151",
+	"x"
+]
+
+
 // add a callback handler
+// i have no idea what this even does tbh
 connection.addMessageCallback("*", function(m) {
 	switch(m.type) {
 			
-		// on "init"
+
+		// On join: 
 		case "init": {
+
+			// So i can store my username lol 
+			// (mostly for getting my id because it changes every join)
 			ownerUsername = m.getString(0);
 
-			// send "init2"
+			// Send finish join
 			connection.send("init2");
+
 		} break;
 			
-		// on "init2"
+
+		// On finishing join:
 		case "init2": {
 			
-			// say "Hello, World!"
+			// say hi
 			connection.send("say", "[CURSEBOT by joo456] Joined!");
+
+			// go to the position of the npc
 			connection.send("m", 11*16, 8*16, 0, 0, 0, 0, 0, 0, 0, false, false, 0);
-			connection.send("say", "/killall")
+
+			// hide behind the npc
+			connection.send("say", "/kill joo456")
+
 		} break;
 			
+		// On a user joining:
 		case "add": {
-			var userid = m.getInt(0);
-			var username = m.getString(1);
 
+			//  VARS  //
+			var userid = m.getInt(0); // Get the user's ID 
+			var username = m.getString(1); // Get the user's username
+
+			// If the user is me,
 			if (username == ownerUsername) {
+
+				// Save my ID
 				ownerID = userid;
 			}
+
+			// If the user is on the banlist,
+			if (bans.includes(username)) {
+
+				// Kick them
+				connection.send("say", "/kick " + username + " You're on the ban list.")
+			}
+
+			// Add the user to the player array so they can be looked up via their userID
 			player[userid] = username;
-			//var 
-			connection.send("say", "[DEBUG] " + username +" (" +userid+")" + " joined");
+
+			// Tell me that the user joined, with their id for debug purposes 
+			connection.send("pm", ownerID, "[DEBUG] " + username +" (" +userid+")" + " joined");
 		} break;
 			
-		// when someone says something
+		// When someone says something:
 		case "say": {
 			
-			playerid = m.getInt(0);
-			input = m.getString(1);
-			// if they said "!download"
-			if(input == "g") {
-				
-				// tell them that
-				connection.send("pressKey", 51, 9, "green");
-				connection.send("say", "[CURSEBOT] Game started!");
-			}
-			else if(input == "c") {
-				connection.send("say", "/giveeffect " + playing[Math.floor(Math.random()*playing.length)] + " curse 20");
-			}
+			// VARS //
+			playerid = m.getInt(0); // Get the user's ID
+			input = m.getString(1); // Get what the user said
+			
+			// ok lemme break this down
+			// IF the player is the owner (me) OR the player is on the admin list
+			//  (playerid == ownerID)                   (admins.includes(player[playerid]))
 
-			if(playerid == ownerID) {
-				if(input == "aplaying") {
-				connection.send("pm", playerid, "Playing: " + playing.toString())
-			}	
+			if((playerid == ownerID) || (admins.includes(player[playerid]))) {
+
+			// They are allowed to use these commands:
+
+				// Command to open the (G)reen door:
+				if(input == "g") {
+					
+					// Hit the green key (51,9 are coordinates for the key)
+					connection.send("pressKey", 51, 9, "green");
+					
+					// Say the door is open
+					connection.send("say", "[CURSEBOT] Doors opened!");
+				}
+
+				// Command to start the game (C)urse
+				else if(input == "c") {
+
+					// Get random player from playing array
+					var randomPlayer =  playing[Math.floor(Math.random()*playing.length)]
+
+					// Give that random player curse for 20 seconds
+					connection.send("say", "/giveeffect " + randomPlayer + " curse 20");
+
+					// Say that the user has curse
+					connection.send("say", "[CURSEBOT] " + randomPlayer + " has curse");
+				}
+
+				// Command to list the array playing (for debug purposes)
+				else if(input == "aplaying") {
+
+					// PM the user who sent the command the array (converted to a string)
+					connection.send("pm", playerid, "Playing: " + playing.toString())
+				}
 			}
 				
 		} break;
-	
+		
+		// When someone switches team: 
 		case "team": {
 
-
-			playerid = m.getInt(0);
-			team = m.getInt(1);
+			// VARS //
+			playerid = m.getInt(0); // Get the user's ID
+			team = m.getInt(1); // Get the team (Stored as a number from 0-6)
 			
+			// If the user switched to no team:
 			if (team == 0) {
-				playerid = m.getInt(0);
+
+				// Remove them from the playing list (and perform checks for winning/continuing game)
 				removePlaying(player[playerid])
 			}
 
+			// If the user switched to red team:
 			if (team == 1) {
-			   // connection.send("say", "[DEBUG] USER CLEARED OF EFFECTS: " + player[playerid]);
-				if ( ! (playing.includes(player[playerid]) ) )  {
-				playing[playing.length] = player[playerid];
-				connection.send("say", player[playerid] + " added to playing array") }
+
+				// If the player is not in playing array:
+				if ( !(playing.includes(player[playerid])) )  {
+
+					// Add them to the array
+					playing[playing.length] = player[playerid];
+
+					// Tell me they were added to the array
+					connection.send("pm", ownerID,  player[playerid] + " added to playing array"); 
+				}	
+
+				// Clear them of effects
 				connection.send("say", "/ce " + player[playerid]);
-				// /giveeffect JOO456 curse 10
 			}
 
+			// If the user switched to magenta team:
 			if (team == 5) {
-			   // connection.send("say", "[DEBUG] USER CLEARED OF EFFECTS: " + player[playerid]);
-				//playing[playerid] = player[playerid];
+
+				// Clear them of effects
 				connection.send("say", "/ce " + player[playerid]);
-				// /giveeffect JOO456 curse 10
 			}
-			
-			//playerid = m.getInt(0);
-			//team = m.getInt(1);
-			//connection.send("say", "i am a bot and i am testing teams");
-			//connection.send("say", "pid" + String(playerid));
-			//connection.send("say", "team" + String(team));		
+	
 		} break;
 
+		// When someone is killed by an effect, /kill, or /killall:
 		case "kill": {
-			playerid = m.getInt(0);
-			removePlaying(player[playerid])
+
+			// VARS //
+			playerid = m.getInt(0); // Get the user's ID
+
+			// Remove them from the playing list (and perform checks for winning/continuing game)
+			removePlaying(player[playerid]);
+		} break;
+
+		case "god": {
+
+			// VARS //
+			playerid = m.getInt(0); // Get the user's ID
+			godON = m.getBoolean(1); // Get the status of godmode
+
+			// If godmode is turned on:
+			if (godON) {
+
+				// If they're in the playing array:
+				if (playing.includes(player[playerid])) {
+
+					// Remove them from the playing list (and perform checks for winning/continuing game)
+					// This is due to possible cheating (plus it breaks the game if they stay in godmode
+					// to avoid dying from curse.
+					removePlaying(player[playerid]);
+					connection.send("say", "/tp " + player[playerid] + " 18 3")
+					connection.send("say", "/ce " + player[playerid])
+					connection.send("say", "/forcefly " + player[playerid] + " false")
+					connection.send("pm", playerid, "No cheating!")
+				}
+			}
 		} break;
 
 
+		// If a player leaves
+		case "left": {
 
-		//case "team": {
-	   // case "m": {
+			// VARS //
+			playerid = m.getInt(0); // Get the user's ID
 
-		  //  playerid = m.getInt(0);
-		 //   connection.send("pm",505, "[DEBUG] USERID: " + m.getDouble(8));
+			removePlayer(player[playerid]);
+
+			// This is gonna be buggy: if a player without curse leaves, its gonna be treated the same as if they died from curse. This is a temporary solution.
+			removePlaying(player[playerid]);
+		}
+
+		// LOOK AT THIS TOMMORROW: IF SOMEONE IS IN THE PLAY AREA WITHOUT BEING ON PLAYING ARRAY TP THEM OUT
+
+	//	case "m": {
+	//		var x = m.getDouble(1) / 16
+	//		var y = m.getDouble(2) / 16
 			
-			//(m.getInt(8) == -1) {
-			//    connection.send("pm",505, "[DEBUG] USERID: " + playerid);
-				//playing[playerid] = player[playerid];
-				//connection.send("say", "/ce " + player[playerid]);
-				// /giveeffect JOO456 curse 10
-		 //   }
-			
-			//playerid = m.getInt(0);
-			//team = m.getInt(1);
-			//connection.send("say", "i am a bot and i am testing teams");
-			//connection.send("say", "pid" + String(playerid));
-			//connection.send("say", "team" + String(team));
-			
-	//	} break;
-		
-		
-			
-		
+	//		connection.send("say", ~~x + " " + ~~y)
+
+		//	for (i = 15; i >= 50; i++) {
+	//			if (((~~x > 15) && (~~x < 50)) && ((~~y > 11) && (~~y < 35)) ) {
+	//				connection.send("say", "/ce " + player[playerid]);
+	//				connection.send("say", "/tp " + player[playerid] + " 18 3");
+	//				connection.send("pm", playerid, "No cheating!");
+	//			}
+		//	}
+
+	//	}
 	}
 });
 
+// Remove someone from the player array
 function removePlayer(value) {
 
-player = player.filter(function(item) { 
-	return item !== value
-})
-}
+	// If they're on the player array
+	if (playing.includes(player[playerid]) ) {
 
-function removePlaying(value) {
-
-playing = playing.filter(function(item) { 
-	if (playing.includes(player[playerid])) {
-		connection.send("say", player[playerid] + " removed from playing array")
-		return item !== value
+		// Remove "value" from player array
+		player = player.filter(function(item) { return item !== value })
 	}
 
-})
 }
+
+// Remove someone from the playing array AND continue/finish the game
+function removePlaying(value) {
+
+	// If they are on the playing array
+	if (playing.includes(player[playerid]) ) {
+
+		// Remove "value" from playing array
+		playing = playing.filter(function(item) { return item !== value })
+		
+		// Tell me they were removed
+		connection.send("pm", ownerID, player[playerid] + " removed from playing array");
+
+
+		// START GAME CHECKS
+
+		// If there is only 1 person on the array left
+		if (playing.length == 1) {
+
+			// Give the last person a coin (by teleporting them to a mamchine that does that)
+			connection.send("pm", ownerID, "PLAYING LENGTH IS 1, SOMEONE SHOULD GET WIN");
+			connection.send("pm", ownerID, playing[0] + " SHOULD GET WIN")
+			connection.send("say", "/tp " + playing[0] + " 0 85");
+			connection.send("say", "[CURSEBOT] " + playing[0] + " won!");
+
+			// Remove them from the array
+			playing = playing.filter(function(item) { return item !== playing[0] });
+		}
+		else
+		{	
+			// Continue the game
+			connection.send("pm", ownerID, "PLAYING LENGTH IS NOT 1, SOMEONE SHOULD GET CURSE");
+			var randomPlayer =  playing[Math.floor(Math.random()*playing.length)]
+			connection.send("pm", ownerID, randomPlayer + " SHOULD HAVE CURSE")
+			connection.send("say", "/giveeffect " + randomPlayer + " curse 20");
+			connection.send("say", "[CURSEBOT] " + randomPlayer + " has curse");
+		}
+	}
+
+}
+
 
 // send "init"
 connection.send("init");
