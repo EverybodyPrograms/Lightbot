@@ -1,5 +1,7 @@
 <html>
 	<head>
+
+
 		<title>Cursebot</title>
 		<script src="https://sirjosh3917.github.io/EEJSIDE/js/PlayerIOClient.development.js"></script>
 		<script src="https://sirjosh3917.github.io/EEJSIDE/js/jsparse_clean.js"></script>
@@ -7,6 +9,7 @@
 		<script src="https://sirjosh3917.github.io/EEJSIDE/js/ConnectHandler.js"></script>
 		<link  href="https://sirjosh3917.github.io/EEJSIDE/styles.css" rel="stylesheet"/>
 		<link rel="shortcut icon" type="image/png" href="https://wiki.everybodyedits.com/images/f/fe/NPC_robot.png"/>
+		
 		<style>
 			body {
 				font-family: monospace;
@@ -59,11 +62,12 @@
 			}
 			/* Responsive layout - makes the three columns stack on top of each other instead of next to each other */
 			@media screen and (max-width:417px) {
-				.column.settings, .column.input {
+				.column.settings, .column.input, .input-message, .input-send {
 					width: 100%;
 				}
 			}
 		</style>
+
 	</head>
 
 	<body>
@@ -73,16 +77,12 @@
 
 		<div class="row">
 
-
 			<div class="column settings">
 
 				<h3>Settings</h3>
 				<h5>These settings save in localhost, they will persist until removed manually<br>(hopefully)</h5>
 
 				<form>
-				<!--	<label> Username</label>
-					<input id="textbox"type="text" name="username"><br> -->
-
 					<input id="snakebox" type="checkbox" name="snake" value="Snake" style="color: white"><label> Snake<br></label>
 
 					<input id="crownbox" type="checkbox" name="crown" value="Crowntowin" style="color: white"><label> Crown to win<br></label>
@@ -90,6 +90,7 @@
 					<input id="trophybox" type="checkbox" name="trophy" value="Trophytowin" checked style="color: white"><label> Trophy to win<br></label>
 					
 					<input id="adminbox" type="checkbox" name="admins" value="Admins" disabled="disabled" checked style="color: white"><label> Admins<br></label>
+
 					<input id="banbox" type="checkbox" name="bans" value="Bans" disabled="disabled" checked style="color: white"><label> Bans<br></label>
 					
 					<input id="friendbox" type="checkbox" name="friendsgetedit" value="Friendsgetedit" checked style="color: white"><label> Friends get edit<br></label>
@@ -99,11 +100,10 @@
 					<input id="byebox" type="checkbox" name="goodbyes" value="Goodbyes" checked style="color: white"><label> Goodbyes<br></label>
 					
 					<input id="deathbox" type="checkbox" name="deaths" value="deaths" checked style="color: white"><label> Death commands<br><br></label>
-					
-					<!-- <input type="text" id="userInput"/> -->
-
 				</form>
+
 				<input type="button" value="Submit" onclick="submit();">
+
 			</div>
 
 			<div class="column input">
@@ -114,13 +114,24 @@
 						<tr><td><input id="input-worldid" type="text" placeholder="World ID" value="PWVzwJeNbUb0I"/></td></tr>
 						<tr><td><input onclick="connect();" type="button" value="Connect"></td></tr>
 						<tr><td><textarea id="log" rows=8></textarea></td></tr>
+						<tr><td>
+							            <div class="form-group col-xs-6">
+							            	<input style="width: 50%" id="input-message" type="text" placeholder="Message">
+											<input style="width: 30%" id="input-send" onclick="send();" type="button" value="Send">
+										</div>
+						</tr></td>
 					</tbody>
 				</table>
 			</div>
 	</div>
 		<script>
 
-
+			function send() {
+				var input = document.getElementById('input-message').value;
+			//	__EEJSIDE______.innerHTML += "lol the button was pressed\n";
+			//	__EEJSIDE______.scrollTo(0, __EEJSIDE______.scrollHeight);
+				console.log("Message: " +input);
+			}
 
 			function submit() {
 				try{snakeON = document.getElementById('snakebox'  ).checked;}catch(err){snakeON = false;}
@@ -134,6 +145,8 @@
 				try{deathCommands = document.getElementById('deathbox'  ).checked;}catch(err){deathCommands = false;}
 				try{adminInput = document.getElementById("userInput").value; }catch(err){adminInput = false;}
 			}
+
+			
 //
 		//	function getCookie(cname) {
 //
@@ -159,8 +172,10 @@
 				let __EEJSIDE____ = document.getElementById("input-password");
 				let __EEJSIDE_____ = document.getElementById("input-worldid");
 				let __EEJSIDE______ = document.getElementById("log");
+				var theTime 
 				let __EEJSIDE_______ = function(msg, name = "EEJSIDE") {
-					__EEJSIDE______.innerHTML += new Date().toUTCString() + " [" + name + "]: " + msg + "\n";
+					theTime = new Date();
+					__EEJSIDE______.innerHTML += new String(theTime.getDate()) +"/"+ String(theTime.getMonth()) + "/" + String(theTime.getFullYear()) + " " + String(theTime.getHours()) + ":" + String(theTime.getMinutes()) + ":" + String(theTime.getSeconds()) + " [" + name + "]: " + msg + "\n";
 					__EEJSIDE______.scrollTo(0, __EEJSIDE______.scrollHeight);
 				};
 				
@@ -200,6 +215,11 @@
 // - better reward system
 // - save progress into file
 
+// VERY EXTENDED PLAN:
+// - HOST A FILESERVER ON RASPBERRY PI
+// - SAVE EVERY PLAYER INTO A FILE
+// - POINTS FOR WINNING
+// - POWERUPS
 ///// END NOTES /////
 
 
@@ -244,6 +264,7 @@ connection.addMessageCallback("*", function(m) {
 		} break;
 			
 
+
 		// On finishing join:
 		case "init2": {
 			
@@ -264,12 +285,28 @@ connection.addMessageCallback("*", function(m) {
 			//  VARS  //
 			var userid = m.getInt(0); // Get the user's ID 
 			var username = m.getString(1); // Get the user's username
-
+			var isFriend = m.getBoolean(12); // Get the user's friend status
+			
 			// If the user is me,
 			if (username == ownerUsername) {
 
 				// Save my ID
 				ownerID = userid;
+			}
+
+			// If the user is on admin list or is a friend
+			if ((admins.includes(username)) || isFriend) {
+
+				// Give the user edit
+				connection.send("say", "/ge " + username)
+
+				// Log it
+				if (isFriend) {
+					log(username + " given edit. Reason: is friend");
+				}
+				else {
+					log(username + " given edit. Reason: is admin");
+				}
 			}
 
 			// If the user is on the banlist,
@@ -284,6 +321,7 @@ connection.addMessageCallback("*", function(m) {
 
 			// Tell me that the user joined, with their id for debug purposes 
 			connection.send("pm", ownerID, "[DEBUG] " + username +" (" +userid+")" + " joined");
+
 		} break;
 			
 		// When someone says something:
@@ -293,6 +331,7 @@ connection.addMessageCallback("*", function(m) {
 			playerid = m.getInt(0); // Get the user's ID
 			input = m.getString(1); // Get what the user said
 			
+			log( player[playerid] + ": " + input)
 			// ok lemme break this down
 			// IF the player is the owner (me) OR the player is on the admin list
 			//  (playerid == ownerID)                   (admins.includes(player[playerid]))
@@ -329,6 +368,10 @@ connection.addMessageCallback("*", function(m) {
 
 					// PM the user who sent the command the array (converted to a string)
 					connection.send("pm", playerid, "Playing: " + playing.toString())
+				}
+
+				else if(input == "!parkour") {
+					connection.send("say", "/tp " + player[playerid] + " 93 97");
 				}
 			}
 				
