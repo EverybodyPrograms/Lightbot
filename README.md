@@ -18,4 +18,4 @@ Built in about a couple hours lol
 Fork of lightbot built for a specific world.
 
 ## Open in browser
-[a](a)
+[Cursebot](http://everybodyprograms.github.io/Lightbot/cursebot.html)
